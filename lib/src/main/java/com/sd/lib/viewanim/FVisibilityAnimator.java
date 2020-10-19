@@ -12,13 +12,13 @@ import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-public class FViewAnimator
+public class FVisibilityAnimator
 {
     private final WeakReference<View> mView;
     private final FVisibilityAnimatorHandler mAnimatorHandler = new FVisibilityAnimatorHandler();
     private AnimatorCreator mAnimatorCreator;
 
-    private FViewAnimator(View view)
+    private FVisibilityAnimator(View view)
     {
         mView = new WeakReference<>(view);
         mAnimatorHandler.setShowAnimatorListener(new AnimatorListenerAdapter()
@@ -180,17 +180,17 @@ public class FViewAnimator
 
     //---------- static ----------
 
-    private static final Map<View, FViewAnimator> MAP_INSTANCE = new WeakHashMap<>();
+    private static final Map<View, FVisibilityAnimator> MAP_INSTANCE = new WeakHashMap<>();
 
-    public static synchronized FViewAnimator of(View view)
+    public static synchronized FVisibilityAnimator of(View view)
     {
         if (view == null)
             return null;
 
-        FViewAnimator animator = MAP_INSTANCE.get(view);
+        FVisibilityAnimator animator = MAP_INSTANCE.get(view);
         if (animator == null)
         {
-            animator = new FViewAnimator(view);
+            animator = new FVisibilityAnimator(view);
             MAP_INSTANCE.put(view, animator);
         }
         return animator;

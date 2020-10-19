@@ -5,7 +5,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.sd.lib.viewanim.FViewAnimator;
+import com.sd.lib.viewanim.FVisibilityAnimator;
 import com.sd.lib.viewanim.creator.obj.SlideTopBottomCreator;
 import com.sd.view_animator.databinding.ActivityMainBinding;
 
@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
 
-        FViewAnimator.of(mBinding.viewAnimator).setAnimatorCreator(new SlideTopBottomCreator());
+        FVisibilityAnimator.of(mBinding.viewAnimator).setAnimatorCreator(new SlideTopBottomCreator());
     }
 
     @Override
@@ -28,10 +28,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         if (v == mBinding.btnShow)
         {
-            FViewAnimator.of(mBinding.viewAnimator).startShowAnimator();
+            FVisibilityAnimator.of(mBinding.viewAnimator).startShowAnimator();
         } else if (v == mBinding.btnHide)
         {
-            FViewAnimator.of(mBinding.viewAnimator).startHideAnimator();
+            FVisibilityAnimator.of(mBinding.viewAnimator).startHideAnimator();
         }
     }
 }
