@@ -114,11 +114,11 @@ public class FVisibilityAnimator
         if (isShowAnimatorStarted())
             return true;
 
-        cancelHideAnimator();
         final Animator animator = getAnimatorCreator().createAnimator(true, getView());
         if (animator == null)
             return false;
 
+        cancelHideAnimator();
         mAnimatorHandler.setShowAnimator(animator);
         return mAnimatorHandler.startShowAnimator();
     }
@@ -151,11 +151,11 @@ public class FVisibilityAnimator
         if (isHideAnimatorStarted())
             return true;
 
-        cancelShowAnimator();
         final Animator animator = getAnimatorCreator().createAnimator(false, getView());
         if (animator == null)
             return false;
 
+        cancelShowAnimator();
         mAnimatorHandler.setHideAnimator(animator);
         return mAnimatorHandler.startHideAnimator();
     }
