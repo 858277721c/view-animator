@@ -1,6 +1,9 @@
 package com.sd.view_animator;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +14,8 @@ import com.sd.view_animator.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener
 {
+    public static final String TAG = MainActivity.class.getSimpleName();
+
     private ActivityMainBinding mBinding;
     private FVisibilityAnimator mVisibilityAnimator;
 
@@ -23,6 +28,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mVisibilityAnimator = new FVisibilityAnimator(mBinding.viewAnimator);
         mVisibilityAnimator.setAnimatorCreator(new SlideTopBottomCreator());
+        mVisibilityAnimator.addShowAnimatorListener(mShowListener);
+        mVisibilityAnimator.addHideAnimatorListener(mHideListener);
     }
 
     @Override
@@ -36,4 +43,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mVisibilityAnimator.startHideAnimator();
         }
     }
+
+    /**
+     * 显示监听
+     */
+    private final AnimatorListenerAdapter mShowListener = new AnimatorListenerAdapter()
+    {
+        @Override
+        public void onAnimationStart(Animator animation)
+        {
+            super.onAnimationStart(animation);
+            Log.i(TAG, "show onAnimationStart");
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation)
+        {
+            super.onAnimationEnd(animation);
+            Log.i(TAG, "show onAnimationStart");
+        }
+    };
+
+    /**
+     * 隐藏监听
+     */
+    private final AnimatorListenerAdapter mHideListener = new AnimatorListenerAdapter()
+    {
+        @Override
+        public void onAnimationStart(Animator animation)
+        {
+            super.onAnimationStart(animation);
+            Log.i(TAG, "hide onAnimationStart");
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation)
+        {
+            super.onAnimationEnd(animation);
+            Log.i(TAG, "hide onAnimationStart");
+        }
+    };
 }
