@@ -1,11 +1,11 @@
-package com.sd.lib.viewanim.utils;
+package com.sd.lib.viewanim;
 
 import android.animation.Animator;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class FVisibilityAnimatorHandler
+class FVisibilityAnimatorHandler
 {
     private Animator mShowAnimator;
     private Animator mHideAnimator;

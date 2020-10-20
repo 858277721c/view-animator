@@ -6,21 +6,19 @@ import android.view.View;
 
 import com.sd.lib.viewanim.creator.AnimatorCreator;
 import com.sd.lib.viewanim.creator.EmptyCreator;
-import com.sd.lib.viewanim.utils.FVisibilityAnimatorHandler;
-
-import java.lang.ref.WeakReference;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 public class FVisibilityAnimator
 {
-    private final WeakReference<View> mView;
+    private final View mView;
     private final FVisibilityAnimatorHandler mAnimatorHandler = new FVisibilityAnimatorHandler();
     private AnimatorCreator mAnimatorCreator;
 
-    private FVisibilityAnimator(View view)
+    public FVisibilityAnimator(View view)
     {
-        mView = new WeakReference<>(view);
+        if (view == null)
+            throw new NullPointerException("view is null");
+
+        mView = view;
         mAnimatorHandler.setShowAnimatorListener(new AnimatorListenerAdapter()
         {
             @Override
@@ -35,6 +33,7 @@ public class FVisibilityAnimator
                 }
             }
         });
+        view.addOnAttachStateChangeListener(mOnAttachStateChangeListener);
     }
 
     /**
@@ -44,7 +43,7 @@ public class FVisibilityAnimator
      */
     public View getView()
     {
-        return mView.get();
+        return mView;
     }
 
     private AnimatorCreator getAnimatorCreator()
@@ -178,21 +177,22 @@ public class FVisibilityAnimator
         mAnimatorHandler.cancelHideAnimator();
     }
 
-    //---------- static ----------
-
-    private static final Map<View, FVisibilityAnimator> MAP_INSTANCE = new WeakHashMap<>();
-
-    public static synchronized FVisibilityAnimator of(View view)
+    private final View.OnAttachStateChangeListener mOnAttachStateChangeListener = new View.OnAttachStateChangeListener()
     {
-        if (view == null)
-            return null;
-
-        FVisibilityAnimator animator = MAP_INSTANCE.get(view);
-        if (animator == null)
+        @Override
+        public void onViewAttachedToWindow(View v)
         {
-            animator = new FVisibilityAnimator(view);
-            MAP_INSTANCE.put(view, animator);
+
         }
-        return animator;
-    }
+
+        @Override
+        public void onViewDetachedFromWindow(View v)
+        {
+            if (isShowAnimatorStarted())
+                cancelShowAnimator();
+
+            if (isHideAnimatorStarted())
+                cancelHideAnimator();
+        }
+    };
 }

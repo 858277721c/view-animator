@@ -12,6 +12,7 @@ import com.sd.view_animator.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener
 {
     private ActivityMainBinding mBinding;
+    private FVisibilityAnimator mVisibilityAnimator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -20,7 +21,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
 
-        FVisibilityAnimator.of(mBinding.viewAnimator).setAnimatorCreator(new SlideTopBottomCreator());
+        mVisibilityAnimator = new FVisibilityAnimator(mBinding.viewAnimator);
+        mVisibilityAnimator.setAnimatorCreator(new SlideTopBottomCreator());
     }
 
     @Override
@@ -28,10 +30,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         if (v == mBinding.btnShow)
         {
-            FVisibilityAnimator.of(mBinding.viewAnimator).startShowAnimator();
+            mVisibilityAnimator.startShowAnimator();
         } else if (v == mBinding.btnHide)
         {
-            FVisibilityAnimator.of(mBinding.viewAnimator).startHideAnimator();
+            mVisibilityAnimator.startHideAnimator();
         }
     }
 }
