@@ -177,11 +177,8 @@ public class FVisibilityAnimator
         @Override
         public void onViewDetachedFromWindow(View v)
         {
-            if (isShowAnimatorStarted())
-                cancelShowAnimator();
-
-            if (isHideAnimatorStarted())
-                cancelHideAnimator();
+            cancelShowAnimator();
+            cancelHideAnimator();
         }
     };
 }
