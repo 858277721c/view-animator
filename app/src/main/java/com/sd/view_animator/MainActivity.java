@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void onAnimationEnd(Animator animation)
         {
             super.onAnimationEnd(animation);
-            Log.i(TAG, "show onAnimationStart");
+            Log.i(TAG, "show onAnimationEnd");
         }
     };
 
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void onAnimationEnd(Animator animation)
         {
             super.onAnimationEnd(animation);
-            Log.i(TAG, "hide onAnimationStart");
+            Log.i(TAG, "hide onAnimationEnd");
         }
     };
 }
