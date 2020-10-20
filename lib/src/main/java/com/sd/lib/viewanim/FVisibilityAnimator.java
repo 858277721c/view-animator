@@ -1,7 +1,6 @@
 package com.sd.lib.viewanim;
 
 import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.view.View;
 
 import com.sd.lib.viewanim.creator.AnimatorCreator;
@@ -19,20 +18,6 @@ public class FVisibilityAnimator
             throw new NullPointerException("view is null");
 
         mView = view;
-        mAnimatorHandler.setShowAnimatorListener(new AnimatorListenerAdapter()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-                super.onAnimationStart(animation);
-                final View animView = getView();
-                if (animView != null)
-                {
-                    if (animView.getVisibility() != View.VISIBLE)
-                        animView.setVisibility(View.VISIBLE);
-                }
-            }
-        });
         view.addOnAttachStateChangeListener(mOnAttachStateChangeListener);
     }
 
@@ -113,7 +98,11 @@ public class FVisibilityAnimator
         if (isShowAnimatorStarted())
             return true;
 
-        final Animator animator = getAnimatorCreator().createAnimator(true, getView());
+        final View view = getView();
+        if (view.getVisibility() != View.VISIBLE)
+            view.setVisibility(View.VISIBLE);
+
+        final Animator animator = getAnimatorCreator().createAnimator(true, view);
         if (animator == null)
             return false;
 
