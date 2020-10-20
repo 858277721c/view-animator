@@ -1,6 +1,7 @@
 package com.sd.lib.viewanim;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.view.View;
 
 import com.sd.lib.viewanim.creator.AnimatorCreator;
@@ -10,6 +11,8 @@ public class FVisibilityAnimator
 {
     private final View mView;
     private final FVisibilityAnimatorHandler mAnimatorHandler = new FVisibilityAnimatorHandler();
+    private final FViewSizeChecker mViewSizeChecker = new FViewSizeChecker();
+
     private AnimatorCreator mAnimatorCreator;
 
     public FVisibilityAnimator(View view)
@@ -19,6 +22,16 @@ public class FVisibilityAnimator
 
         mView = view;
         view.addOnAttachStateChangeListener(mOnAttachStateChangeListener);
+
+        mAnimatorHandler.setShowAnimatorListener(new AnimatorListenerAdapter()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                super.onAnimationStart(animation);
+                mViewSizeChecker.destroy();
+            }
+        });
     }
 
     /**
@@ -90,25 +103,35 @@ public class FVisibilityAnimator
 
     /**
      * 开始显示动画
-     *
-     * @return true-动画被执行
      */
-    public boolean startShowAnimator()
+    public void startShowAnimator()
     {
         if (isShowAnimatorStarted())
-            return true;
+            return;
 
         final View view = getView();
         if (view.getVisibility() != View.VISIBLE)
             view.setVisibility(View.VISIBLE);
 
-        final Animator animator = getAnimatorCreator().createAnimator(true, view);
-        if (animator == null)
-            return false;
+        mViewSizeChecker.check(view, new FViewSizeChecker.Callback()
+        {
+            @Override
+            public void onReadyChanged(boolean isReady)
+            {
+                if (isReady)
+                {
+                    mViewSizeChecker.destroy();
 
-        cancelHideAnimator();
-        mAnimatorHandler.setShowAnimator(animator);
-        return mAnimatorHandler.startShowAnimator();
+                    final Animator animator = getAnimatorCreator().createAnimator(true, view);
+                    if (animator != null)
+                    {
+                        cancelHideAnimator();
+                        mAnimatorHandler.setShowAnimator(animator);
+                        mAnimatorHandler.startShowAnimator();
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -127,25 +150,24 @@ public class FVisibilityAnimator
     public void cancelShowAnimator()
     {
         mAnimatorHandler.cancelShowAnimator();
+        mViewSizeChecker.destroy();
     }
 
     /**
      * 开始隐藏动画
-     *
-     * @return true-动画被执行
      */
-    public boolean startHideAnimator()
+    public void startHideAnimator()
     {
         if (isHideAnimatorStarted())
-            return true;
+            return;
 
         final Animator animator = getAnimatorCreator().createAnimator(false, getView());
-        if (animator == null)
-            return false;
-
-        cancelShowAnimator();
-        mAnimatorHandler.setHideAnimator(animator);
-        return mAnimatorHandler.startHideAnimator();
+        if (animator != null)
+        {
+            cancelShowAnimator();
+            mAnimatorHandler.setHideAnimator(animator);
+            mAnimatorHandler.startHideAnimator();
+        }
     }
 
     /**
