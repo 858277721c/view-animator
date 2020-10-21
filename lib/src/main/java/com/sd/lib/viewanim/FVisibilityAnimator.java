@@ -105,19 +105,14 @@ public class FVisibilityAnimator
         mViewSizeChecker.check(view, new FViewSizeChecker.Callback()
         {
             @Override
-            public void onReadyChanged(boolean isReady)
+            public void onSizeReady()
             {
-                if (isReady)
+                final Animator animator = getAnimatorCreator().createAnimator(true, view);
+                if (animator != null)
                 {
-                    mViewSizeChecker.destroy();
-
-                    final Animator animator = getAnimatorCreator().createAnimator(true, view);
-                    if (animator != null)
-                    {
-                        cancelHideAnimator();
-                        mAnimatorHandler.setShowAnimator(animator);
-                        mAnimatorHandler.startShowAnimator();
-                    }
+                    cancelHideAnimator();
+                    mAnimatorHandler.setShowAnimator(animator);
+                    mAnimatorHandler.startShowAnimator();
                 }
             }
         });
@@ -150,13 +145,21 @@ public class FVisibilityAnimator
         if (isHideAnimatorStarted())
             return;
 
-        final Animator animator = getAnimatorCreator().createAnimator(false, getView());
-        if (animator != null)
+        final View view = getView();
+        mViewSizeChecker.check(view, new FViewSizeChecker.Callback()
         {
-            cancelShowAnimator();
-            mAnimatorHandler.setHideAnimator(animator);
-            mAnimatorHandler.startHideAnimator();
-        }
+            @Override
+            public void onSizeReady()
+            {
+                final Animator animator = getAnimatorCreator().createAnimator(false, getView());
+                if (animator != null)
+                {
+                    cancelShowAnimator();
+                    mAnimatorHandler.setHideAnimator(animator);
+                    mAnimatorHandler.startHideAnimator();
+                }
+            }
+        });
     }
 
     /**
@@ -175,6 +178,7 @@ public class FVisibilityAnimator
     public void cancelHideAnimator()
     {
         mAnimatorHandler.cancelHideAnimator();
+        mViewSizeChecker.destroy();
     }
 
     private final View.OnAttachStateChangeListener mOnAttachStateChangeListener = new View.OnAttachStateChangeListener()
