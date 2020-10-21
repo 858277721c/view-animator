@@ -171,6 +171,9 @@ public class FVisibilityAnimator
             return;
 
         final View view = getView();
+        if (view.getVisibility() == View.VISIBLE)
+            return;
+
         if (view.getVisibility() == View.GONE)
             view.setVisibility(View.INVISIBLE);
 
