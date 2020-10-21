@@ -181,10 +181,7 @@ public class FVisibilityAnimator
         destroySizeChecker();
 
         final View view = getView();
-        if (view.getVisibility() != View.VISIBLE)
-            return false;
-
-        if (!mViewSizeChecker.checkReady(view))
+        if (!mViewSizeChecker.checkReady(view) || view.getVisibility() != View.VISIBLE)
         {
             if (view.getVisibility() != mHideVisibility)
                 view.setVisibility(mHideVisibility);
