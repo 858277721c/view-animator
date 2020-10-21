@@ -170,6 +170,8 @@ public class FVisibilityAnimator
         if (isShowAnimatorStarted())
             return;
 
+        cancelHideAnimator();
+
         final View view = getView();
         if (view.getVisibility() == View.VISIBLE)
             return;
@@ -227,7 +229,7 @@ public class FVisibilityAnimator
         if (isHideAnimatorStarted())
             return true;
 
-        destroySizeChecker();
+        cancelShowAnimator();
 
         final View view = getView();
         if (view.getVisibility() != View.VISIBLE)
