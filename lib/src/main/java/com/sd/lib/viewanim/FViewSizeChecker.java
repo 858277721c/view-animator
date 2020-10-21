@@ -13,6 +13,7 @@ class FViewSizeChecker
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private final Map<View, String> mViewHolder = new ConcurrentHashMap<>();
 
+    private boolean mIsDestroy = true;
     private long mCheckDelay;
     private Callback mCallback;
 
@@ -68,6 +69,7 @@ class FViewSizeChecker
 
         if (mViewHolder.size() > 0)
         {
+            mIsDestroy = false;
             mCallback = callback;
             startCheckSize();
             return true;
@@ -102,6 +104,9 @@ class FViewSizeChecker
         @Override
         public void run()
         {
+            if (mIsDestroy)
+                return;
+
             boolean isReady = true;
             for (View view : mViewHolder.keySet())
             {
@@ -144,14 +149,22 @@ class FViewSizeChecker
      */
     public void destroy()
     {
+        if (mIsDestroy)
+            return;
+
+        mCallback = null;
         stopCheckSize();
 
-        for (View view : mViewHolder.keySet())
+        if (mViewHolder.size() > 0)
         {
-            view.removeOnLayoutChangeListener(mOnLayoutChangeListener);
+            for (View view : mViewHolder.keySet())
+            {
+                view.removeOnLayoutChangeListener(mOnLayoutChangeListener);
+            }
+            mViewHolder.clear();
         }
-        mViewHolder.clear();
-        mCallback = null;
+
+        mIsDestroy = true;
     }
 
     private static boolean isAttached(View view)
