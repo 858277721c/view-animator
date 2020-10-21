@@ -1,6 +1,7 @@
 package com.sd.lib.viewanim;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.view.View;
 
 import com.sd.lib.viewanim.creator.AnimatorCreator;
@@ -22,6 +23,17 @@ public class FVisibilityAnimator
 
         mView = view;
         view.addOnAttachStateChangeListener(mOnAttachStateChangeListener);
+
+        mAnimatorHandler.setShowAnimatorListener(new AnimatorListenerAdapter()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                super.onAnimationStart(animation);
+                if (mView.getVisibility() != View.VISIBLE)
+                    mView.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     /**
@@ -116,8 +128,8 @@ public class FVisibilityAnimator
             return;
 
         final View view = getView();
-        if (view.getVisibility() != View.VISIBLE)
-            view.setVisibility(View.VISIBLE);
+        if (view.getVisibility() == View.GONE)
+            view.setVisibility(View.INVISIBLE);
 
         mViewSizeChecker.check(view, new FViewSizeChecker.Callback()
         {
