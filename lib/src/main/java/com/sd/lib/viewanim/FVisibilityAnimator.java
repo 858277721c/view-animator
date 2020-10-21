@@ -151,7 +151,7 @@ public class FVisibilityAnimator
     public void cancelShowAnimator()
     {
         mAnimatorHandler.cancelShowAnimator();
-        mViewSizeChecker.destroy();
+        destroySizeChecker();
     }
 
     /**
@@ -204,6 +204,11 @@ public class FVisibilityAnimator
     public void cancelHideAnimator()
     {
         mAnimatorHandler.cancelHideAnimator();
+        destroySizeChecker();
+    }
+
+    private void destroySizeChecker()
+    {
         mViewSizeChecker.destroy();
     }
 
