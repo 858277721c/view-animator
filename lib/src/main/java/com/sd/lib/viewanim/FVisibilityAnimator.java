@@ -218,7 +218,6 @@ public class FVisibilityAnimator
     public void cancelHideAnimator()
     {
         mAnimatorHandler.cancelHideAnimator();
-        destroySizeChecker();
     }
 
     private void destroySizeChecker()
