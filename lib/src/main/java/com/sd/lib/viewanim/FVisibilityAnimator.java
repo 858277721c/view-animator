@@ -12,6 +12,7 @@ public class FVisibilityAnimator
     private final FVisibilityAnimatorHandler mAnimatorHandler = new FVisibilityAnimatorHandler();
     private final FViewSizeChecker mViewSizeChecker = new FViewSizeChecker();
 
+    private int mHideVisibility = View.INVISIBLE;
     private AnimatorCreator mAnimatorCreator;
 
     public FVisibilityAnimator(View view)
@@ -48,6 +49,17 @@ public class FVisibilityAnimator
     public void setAnimatorCreator(AnimatorCreator creator)
     {
         mAnimatorCreator = creator;
+    }
+
+    /**
+     * 设置隐藏的可见状态
+     *
+     * @param visibility
+     */
+    public void setHideVisibility(int visibility)
+    {
+        if (visibility == View.INVISIBLE || visibility == View.GONE)
+            mHideVisibility = visibility;
     }
 
     /**
@@ -146,20 +158,20 @@ public class FVisibilityAnimator
             return;
 
         final View view = getView();
-        mViewSizeChecker.check(view, new FViewSizeChecker.Callback()
+        if (!mViewSizeChecker.checkReady(view))
         {
-            @Override
-            public void onSizeReady()
-            {
-                final Animator animator = getAnimatorCreator().createAnimator(false, getView());
-                if (animator != null)
-                {
-                    cancelShowAnimator();
-                    mAnimatorHandler.setHideAnimator(animator);
-                    mAnimatorHandler.startHideAnimator();
-                }
-            }
-        });
+            if (view.getVisibility() != mHideVisibility)
+                view.setVisibility(mHideVisibility);
+            return;
+        }
+
+        final Animator animator = getAnimatorCreator().createAnimator(false, getView());
+        if (animator != null)
+        {
+            cancelShowAnimator();
+            mAnimatorHandler.setHideAnimator(animator);
+            mAnimatorHandler.startHideAnimator();
+        }
     }
 
     /**
