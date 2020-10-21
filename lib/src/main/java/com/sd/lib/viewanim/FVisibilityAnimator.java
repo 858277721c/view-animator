@@ -30,8 +30,7 @@ public class FVisibilityAnimator
             public void onAnimationStart(Animator animation)
             {
                 super.onAnimationStart(animation);
-                if (mView.getVisibility() != View.VISIBLE)
-                    mView.setVisibility(View.VISIBLE);
+                showView();
             }
         });
     }
@@ -142,6 +141,9 @@ public class FVisibilityAnimator
                     cancelHideAnimator();
                     mAnimatorHandler.setShowAnimator(animator);
                     mAnimatorHandler.startShowAnimator();
+                } else
+                {
+                    showView();
                 }
             }
         });
@@ -181,10 +183,17 @@ public class FVisibilityAnimator
         destroySizeChecker();
 
         final View view = getView();
-        if (!mViewSizeChecker.checkReady(view) || view.getVisibility() != View.VISIBLE)
+        if (view.getVisibility() != View.VISIBLE)
         {
-            if (view.getVisibility() != mHideVisibility)
-                view.setVisibility(mHideVisibility);
+            // 如果看不见，不执行动画
+            hideView();
+            return false;
+        }
+
+        if (!mViewSizeChecker.checkReady(view))
+        {
+            // 如果未准备好，不执行动画
+            hideView();
             return false;
         }
 
@@ -196,8 +205,7 @@ public class FVisibilityAnimator
             return mAnimatorHandler.startHideAnimator();
         } else
         {
-            if (view.getVisibility() != mHideVisibility)
-                view.setVisibility(mHideVisibility);
+            hideView();
             return false;
         }
     }
@@ -223,6 +231,18 @@ public class FVisibilityAnimator
     private void destroySizeChecker()
     {
         mViewSizeChecker.destroy();
+    }
+
+    private void showView()
+    {
+        if (mView.getVisibility() != View.VISIBLE)
+            mView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideView()
+    {
+        if (mView.getVisibility() != mHideVisibility)
+            mView.setVisibility(mHideVisibility);
     }
 
     private final View.OnAttachStateChangeListener mOnAttachStateChangeListener = new View.OnAttachStateChangeListener()
