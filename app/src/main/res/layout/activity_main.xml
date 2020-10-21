@@ -26,6 +26,13 @@
 
     </LinearLayout>
 
+    <View
+        android:id="@+id/view_follow_visibility"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center"
+        android:background="@color/black" />
+
     <Button
         android:id="@+id/view_animator"
         android:layout_width="match_parent"

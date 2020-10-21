@@ -7,6 +7,9 @@ import android.view.View;
 import com.sd.lib.viewanim.creator.AnimatorCreator;
 import com.sd.lib.viewanim.creator.EmptyCreator;
 
+import java.util.Map;
+import java.util.WeakHashMap;
+
 public class FVisibilityAnimator
 {
     private final View mView;
@@ -15,6 +18,8 @@ public class FVisibilityAnimator
 
     private int mHideVisibility = View.INVISIBLE;
     private AnimatorCreator mAnimatorCreator;
+
+    private Map<View, String> mFollowVisibilityViewHolder;
 
     public FVisibilityAnimator(View view)
     {
@@ -84,6 +89,41 @@ public class FVisibilityAnimator
         } else
         {
             throw new IllegalArgumentException("Illegal visibility value. View.INVISIBLE or View.GONE required");
+        }
+    }
+
+    /**
+     * 添加跟随可见状态View
+     *
+     * @param view
+     */
+    public void addFollowVisibilityView(View view)
+    {
+        if (view == null)
+            return;
+
+        if (mFollowVisibilityViewHolder == null)
+            mFollowVisibilityViewHolder = new WeakHashMap<>();
+
+        mFollowVisibilityViewHolder.put(view, "");
+        synchronizeFollowViewVisibility(view);
+    }
+
+    /**
+     * 移除跟随可见状态View
+     *
+     * @param view
+     */
+    public void removeFollowVisibilityView(View view)
+    {
+        if (view == null)
+            return;
+
+        if (mFollowVisibilityViewHolder != null)
+        {
+            mFollowVisibilityViewHolder.remove(view);
+            if (mFollowVisibilityViewHolder.isEmpty())
+                mFollowVisibilityViewHolder = null;
         }
     }
 
@@ -245,13 +285,37 @@ public class FVisibilityAnimator
     private void showView()
     {
         if (mView.getVisibility() != View.VISIBLE)
+        {
             mView.setVisibility(View.VISIBLE);
+            synchronizeFollowViewVisibility();
+        }
     }
 
     private void hideView()
     {
         if (mView.getVisibility() != mHideVisibility)
+        {
             mView.setVisibility(mHideVisibility);
+            synchronizeFollowViewVisibility();
+        }
+    }
+
+    private void synchronizeFollowViewVisibility()
+    {
+        if (mFollowVisibilityViewHolder == null)
+            return;
+
+        for (View item : mFollowVisibilityViewHolder.keySet())
+        {
+            synchronizeFollowViewVisibility(item);
+        }
+    }
+
+    private void synchronizeFollowViewVisibility(View view)
+    {
+        final int visibility = mView.getVisibility();
+        if (view.getVisibility() != visibility)
+            view.setVisibility(visibility);
     }
 
     private final View.OnAttachStateChangeListener mOnAttachStateChangeListener = new View.OnAttachStateChangeListener()

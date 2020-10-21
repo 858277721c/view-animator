@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mVisibilityAnimator.setAnimatorCreator(new SlideTopBottomCreator());
         mVisibilityAnimator.addShowAnimatorListener(mShowListener);
         mVisibilityAnimator.addHideAnimatorListener(mHideListener);
+
+        mVisibilityAnimator.addFollowVisibilityView(mBinding.viewFollowVisibility);
     }
 
     @Override
