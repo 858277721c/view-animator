@@ -52,9 +52,9 @@ public class FVisibilityAnimator
     }
 
     /**
-     * 设置隐藏的可见状态
+     * 设置隐藏的状态值
      *
-     * @param visibility
+     * @param visibility {@link View#INVISIBLE}或者{@link View#GONE}
      */
     public void setHideVisibility(int visibility)
     {
@@ -150,27 +150,36 @@ public class FVisibilityAnimator
     }
 
     /**
-     * 开始隐藏动画
+     * 开始隐藏动画，如果不满足动画执行条件，则直接隐藏
+     * <p>
+     * 动画执行条件：view被添加到ui上，并且宽高都大于0
+     *
+     * @return true-动画被成功发起
      */
-    public void startHideAnimator()
+    public boolean startHideAnimator()
     {
         if (isHideAnimatorStarted())
-            return;
+            return true;
 
         final View view = getView();
         if (!mViewSizeChecker.checkReady(view))
         {
             if (view.getVisibility() != mHideVisibility)
                 view.setVisibility(mHideVisibility);
-            return;
+            return false;
         }
 
-        final Animator animator = getAnimatorCreator().createAnimator(false, getView());
+        final Animator animator = getAnimatorCreator().createAnimator(false, view);
         if (animator != null)
         {
             cancelShowAnimator();
             mAnimatorHandler.setHideAnimator(animator);
-            mAnimatorHandler.startHideAnimator();
+            return mAnimatorHandler.startHideAnimator();
+        } else
+        {
+            if (view.getVisibility() != mHideVisibility)
+                view.setVisibility(mHideVisibility);
+            return false;
         }
     }
 
