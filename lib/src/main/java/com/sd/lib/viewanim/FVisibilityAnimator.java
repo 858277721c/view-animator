@@ -16,8 +16,9 @@ public class FVisibilityAnimator
     private final FVisibilityAnimatorHandler mAnimatorHandler = new FVisibilityAnimatorHandler();
     private final FViewSizeChecker mViewSizeChecker = new FViewSizeChecker();
 
-    private int mHideVisibility = View.INVISIBLE;
     private AnimatorCreator mAnimatorCreator;
+    private int mHideVisibility = View.INVISIBLE;
+    private boolean mResetAfterHideAnimator = true;
 
     private Map<View, String> mFollowVisibilityViewHolder;
 
@@ -29,24 +30,8 @@ public class FVisibilityAnimator
         mView = view;
         view.addOnAttachStateChangeListener(mOnAttachStateChangeListener);
 
-        mAnimatorHandler.setShowAnimatorListener(new AnimatorListenerAdapter()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-                super.onAnimationStart(animation);
-                showView();
-            }
-        });
-        mAnimatorHandler.setHideAnimatorListener(new AnimatorListenerAdapter()
-        {
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                super.onAnimationEnd(animation);
-                hideView();
-            }
-        });
+        mAnimatorHandler.setShowAnimatorListener(mShowAnimatorListener);
+        mAnimatorHandler.setHideAnimatorListener(mHideAnimatorListener);
     }
 
     /**
@@ -90,6 +75,16 @@ public class FVisibilityAnimator
         {
             throw new IllegalArgumentException("Illegal visibility value. View.INVISIBLE or View.GONE required");
         }
+    }
+
+    /**
+     * 隐藏动画结束后，是否重置View的各项属性
+     *
+     * @param reset
+     */
+    public void setResetAfterHideAnimator(boolean reset)
+    {
+        mResetAfterHideAnimator = reset;
     }
 
     /**
@@ -333,4 +328,46 @@ public class FVisibilityAnimator
             cancelHideAnimator();
         }
     };
+
+    private final AnimatorListenerAdapter mShowAnimatorListener = new AnimatorListenerAdapter()
+    {
+        @Override
+        public void onAnimationStart(Animator animation)
+        {
+            super.onAnimationStart(animation);
+            showView();
+        }
+    };
+
+    private final AnimatorListenerAdapter mHideAnimatorListener = new AnimatorListenerAdapter()
+    {
+        @Override
+        public void onAnimationEnd(Animator animation)
+        {
+            super.onAnimationEnd(animation);
+            hideView();
+            if (mResetAfterHideAnimator)
+                resetView(mView);
+        }
+    };
+
+    /**
+     * 重置view
+     *
+     * @param view
+     */
+    private static void resetView(View view)
+    {
+        if (view == null)
+            return;
+
+        view.setAlpha(1.0f);
+        view.setRotation(0.0f);
+        view.setRotationX(0.0f);
+        view.setRotationY(0.0f);
+        view.setTranslationX(0.0f);
+        view.setTranslationY(0.0f);
+        view.setScaleX(1.0f);
+        view.setScaleY(1.0f);
+    }
 }
