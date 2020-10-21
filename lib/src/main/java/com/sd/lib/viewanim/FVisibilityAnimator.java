@@ -120,9 +120,9 @@ public class FVisibilityAnimator
     }
 
     /**
-     * 开始显示动画
+     * 开始显示
      */
-    public void startShowAnimator()
+    public void startShow()
     {
         if (isShowAnimatorStarted())
             return;
@@ -167,13 +167,13 @@ public class FVisibilityAnimator
     }
 
     /**
-     * 开始隐藏动画，如果不满足动画执行条件，则直接隐藏
+     * 开始隐藏，如果不满足动画执行条件，则直接隐藏
      * <p>
      * 动画执行条件：view被添加到ui上，并且宽高都大于0
      *
      * @return true-动画被成功发起
      */
-    public boolean startHideAnimator()
+    public boolean startHide()
     {
         if (isHideAnimatorStarted())
             return true;

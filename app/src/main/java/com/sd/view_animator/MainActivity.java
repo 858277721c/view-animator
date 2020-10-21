@@ -37,10 +37,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         if (v == mBinding.btnShow)
         {
-            mVisibilityAnimator.startShowAnimator();
+            mVisibilityAnimator.startShow();
         } else if (v == mBinding.btnHide)
         {
-            mVisibilityAnimator.startHideAnimator();
+            mVisibilityAnimator.startHide();
         }
     }
 
