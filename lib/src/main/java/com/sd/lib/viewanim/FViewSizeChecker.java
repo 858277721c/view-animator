@@ -13,9 +13,19 @@ class FViewSizeChecker
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private final Map<View, String> mViewHolder = new ConcurrentHashMap<>();
 
-    private boolean mIsDestroy = true;
+    private boolean mIsDestroyed = true;
     private long mCheckDelay;
     private Callback mCallback;
+
+    /**
+     * 是否处于销毁状态
+     *
+     * @return
+     */
+    public boolean isDestroyed()
+    {
+        return mIsDestroyed;
+    }
 
     /**
      * 设置延迟多少毫秒开始检查
@@ -69,7 +79,7 @@ class FViewSizeChecker
 
         if (mViewHolder.size() > 0)
         {
-            mIsDestroy = false;
+            mIsDestroyed = false;
             mCallback = callback;
             startCheckSize();
             return true;
@@ -104,7 +114,7 @@ class FViewSizeChecker
         @Override
         public void run()
         {
-            if (mIsDestroy)
+            if (mIsDestroyed)
                 return;
 
             boolean isReady = true;
@@ -149,7 +159,7 @@ class FViewSizeChecker
      */
     public void destroy()
     {
-        if (mIsDestroy)
+        if (mIsDestroyed)
             return;
 
         mCallback = null;
@@ -164,7 +174,7 @@ class FViewSizeChecker
             mViewHolder.clear();
         }
 
-        mIsDestroy = true;
+        mIsDestroyed = true;
     }
 
     private static boolean isAttached(View view)
