@@ -33,6 +33,15 @@ public class FVisibilityAnimator
                 showView();
             }
         });
+        mAnimatorHandler.setHideAnimatorListener(new AnimatorListenerAdapter()
+        {
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                super.onAnimationEnd(animation);
+                hideView();
+            }
+        });
     }
 
     /**
