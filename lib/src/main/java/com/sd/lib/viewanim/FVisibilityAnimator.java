@@ -179,6 +179,12 @@ public class FVisibilityAnimator
         if (view.getVisibility() == View.GONE)
             view.setVisibility(View.INVISIBLE);
 
+        if (!mViewSizeChecker.isDestroyed())
+        {
+            // 已经在准备中
+            return;
+        }
+
         mViewSizeChecker.check(view, new FViewSizeChecker.Callback()
         {
             @Override
