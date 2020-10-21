@@ -59,7 +59,12 @@ public class FVisibilityAnimator
     public void setHideVisibility(int visibility)
     {
         if (visibility == View.INVISIBLE || visibility == View.GONE)
+        {
             mHideVisibility = visibility;
+        } else
+        {
+            throw new IllegalArgumentException("Illegal visibility value. View.INVISIBLE or View.GONE required");
+        }
     }
 
     /**
