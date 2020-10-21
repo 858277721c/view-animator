@@ -166,6 +166,8 @@ public class FVisibilityAnimator
         if (isHideAnimatorStarted())
             return true;
 
+        destroySizeChecker();
+
         final View view = getView();
         if (!mViewSizeChecker.checkReady(view))
         {
